@@ -33,13 +33,11 @@ public class Book {
     @Override
     public String toString() {
         var message = """
-                
-                -----LIBRO-----
+                📖 LIBRO
                 Título: %s
                 Autor: %s
                 Idioma: %s
                 Número de descargas: %d
-                ---------------
                 """;
 
         return String.format(message,
