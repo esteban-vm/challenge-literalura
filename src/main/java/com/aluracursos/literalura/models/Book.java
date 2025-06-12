@@ -1,6 +1,7 @@
 package com.aluracursos.literalura.models;
 
 import com.aluracursos.literalura.data.BookData;
+import com.aluracursos.literalura.helpers.TextTranslator;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +13,8 @@ public class Book {
     @Column(unique = true)
     private String title;
     private String language;
+    @Column(length = 2000)
+    private String summary;
     private Integer downloads;
     @ManyToOne(fetch = FetchType.EAGER)
     private Author author;
@@ -22,6 +25,8 @@ public class Book {
     public Book(BookData data) {
         this.title = data.title();
         this.language = data.languages().get(0);
+        // this.summary = data.summaries().get(0);
+        this.summary = TextTranslator.translate(data.summaries().get(0));
         this.downloads = data.downloads();
     }
 
@@ -66,6 +71,14 @@ public class Book {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Integer getDownloads() {
