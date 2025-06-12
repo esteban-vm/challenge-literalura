@@ -34,13 +34,11 @@ public class Author {
     @Override
     public String toString() {
         var message = """
-                
-                -----AUTOR-----
+                🙋 AUTOR/A
                 Nombre: %s
                 Fecha de nacimiento: %s
                 Fecha de fallecimiento: %s
                 Libros: %s
-                ---------------
                 """;
 
         return String.format(message,
