@@ -50,6 +50,13 @@ public class Main {
 
         while (option != 0) {
             System.out.println(menu);
+
+            if (!scanner.hasNextInt()) {
+                System.out.println("Ingrese una opción válida");
+                scanner.next();
+                continue;
+            }
+
             option = scanner.nextInt();
             scanner.nextLine();
 
