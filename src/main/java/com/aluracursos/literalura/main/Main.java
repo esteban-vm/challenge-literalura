@@ -24,10 +24,12 @@ public class Main {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
 
+
     public Main(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
     }
+
 
     public void showMenu() {
         var menu = """
@@ -41,7 +43,8 @@ public class Main {
                 5 - Listar libros por idioma.
                 6 - Listar libros por autor.
                 7 - Listar los 10 libros más descargados.
-                8 - Mostrar estadísticas.
+                8 - Ver resumen de un libro.
+                9 - Mostrar estadísticas.
                 0 - Salir
                 -----------------------------------------------
                 """;
@@ -68,7 +71,8 @@ public class Main {
                 case 5 -> listBooksByLanguage();
                 case 6 -> listBooksByAuthor();
                 case 7 -> listTop10BooksDownloaded();
-                case 8 -> showStats();
+                case 8 -> showBookSummary();
+                case 9 -> showStats();
                 case 0 -> System.out.println("Cerrando la aplicación…");
                 default -> System.out.println("Opción inválida");
             }
@@ -76,6 +80,7 @@ public class Main {
 
         scanner.close();
     }
+
 
     private void searchBookByTitle() {
         System.out.println("\nEscriba el título del libro que desea buscar:");
@@ -109,17 +114,20 @@ public class Main {
 
     }
 
+
     private void listRegisteredBooks() {
         System.out.println("\nLibros registrados:");
         var books = bookRepository.findAllByOrderByTitle();
         printList(books);
     }
 
+
     private void listRegisteredAuthors() {
         System.out.println("\nAutores registrados:");
         var authors = authorRepository.findAllByOrderByName();
         printList(authors);
     }
+
 
     private void listAliveAuthorsByYear() {
         System.out.println("\nIngrese el año del que desea listar los autores:");
@@ -128,6 +136,7 @@ public class Main {
         System.out.println("\nAutores vivos en " + inputYear + ":");
         printList(authors);
     }
+
 
     private void listBooksByLanguage() {
         System.out.println("\nIngrese el código del idioma del cual desea listar los libros:");
@@ -143,6 +152,7 @@ public class Main {
         System.out.println("\nLibros en " + language + ":");
         printList(books);
     }
+
 
     private void listBooksByAuthor() {
         System.out.println("\nIngrese el número del autor del cual desea listar los libros:");
@@ -164,11 +174,33 @@ public class Main {
         }
     }
 
+
     private void listTop10BooksDownloaded() {
         System.out.println("\nLos 10 libros más descargados:");
         var books = bookRepository.findTop10ByOrderByDownloadsDesc();
         printList(books);
     }
+
+
+    private void showBookSummary() {
+        System.out.println("\nIngrese el número del libro del cual desea ver el resumen:");
+        var books = bookRepository.findAll();
+
+        books.stream()
+                .sorted(Comparator.comparing(Book::getId))
+                .forEach(book -> {
+                    System.out.println(book.getId() + " - " + book.getTitle());
+                });
+
+        var inputNumber = scanner.nextLong();
+        var bookFromDB = bookRepository.findById(inputNumber);
+
+        bookFromDB.ifPresent(book -> {
+            System.out.println("\n\t\tResumen de " + book.getTitle().toUpperCase() + ":");
+            System.out.println(StringUtils.formatSummary(book.getSummary(), 10));
+        });
+    }
+
 
     private void showStats() {
         var books = bookRepository.findAll();
@@ -194,6 +226,7 @@ public class Main {
             System.out.println("Total de descargas: " + stats.getSum());
         }
     }
+
 
     private <T> void printList(List<T> list) {
         if (list.isEmpty()) {
