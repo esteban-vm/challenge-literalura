@@ -4,6 +4,11 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 public class StringUtils {
+    public static String encodeTitle(String title) {
+        return URLEncoder.encode(title.trim(), Charset.defaultCharset());
+    }
+
+
     public static String formatName(String originalName) {
         if (!originalName.contains(",")) return originalName;
 
@@ -14,7 +19,31 @@ public class StringUtils {
         return firstnames + " " + lastnames;
     }
 
-    public static String encodeTitle(String title) {
-        return URLEncoder.encode(title.trim(), Charset.defaultCharset());
+
+    public static String formatSummary(String originalSummary, int wordsPerLine) {
+        if (originalSummary == null || originalSummary.isEmpty() || wordsPerLine <= 0) {
+            return originalSummary;
+        }
+
+        String[] words = originalSummary.split("\\s+");
+        StringBuilder result = new StringBuilder();
+        int wordCounter = 0;
+
+        for (String word : words) {
+            result.append(word);
+            wordCounter++;
+
+            if (word.matches(".*[.;?]$")) {
+                result.append("\n");
+                wordCounter = 0;
+            } else if (wordCounter >= wordsPerLine) {
+                result.append("\n");
+                wordCounter = 0;
+            } else {
+                result.append(" ");
+            }
+        }
+
+        return result.toString().trim();
     }
 }
