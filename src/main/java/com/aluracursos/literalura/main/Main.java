@@ -33,9 +33,8 @@ public class Main {
 
     public void showMenu() {
         var menu = """
-                
                 -----------------------------------------------
-                Elija la opción a través de su número:
+                🗃️ Ingrese la opción a través de su número:
                 1 - Buscar libro por título.
                 2 - Listar libros registrados.
                 3 - Listar autores registrados.
@@ -55,7 +54,7 @@ public class Main {
             System.out.println(menu);
 
             if (!scanner.hasNextInt()) {
-                System.out.println("Ingrese una opción válida");
+                System.out.println("⚠ Ingrese una opción válida");
                 scanner.next();
                 continue;
             }
@@ -74,7 +73,7 @@ public class Main {
                 case 8 -> showBookSummary();
                 case 9 -> showStats();
                 case 0 -> System.out.println("Cerrando la aplicación…");
-                default -> System.out.println("Opción inválida");
+                default -> System.out.println("⚠ Ingrese una opción válida");
             }
         }
 
@@ -83,7 +82,7 @@ public class Main {
 
 
     private void searchBookByTitle() {
-        System.out.println("\nEscriba el título del libro que desea buscar:");
+        System.out.println("\n✒ Ingrese el título del libro que desea buscar:");
 
         var inputTitle = scanner.nextLine();
         var encodedTitle = StringUtils.encodeTitle(inputTitle);
@@ -92,14 +91,14 @@ public class Main {
         var results = responseData.results();
 
         if (results.isEmpty()) {
-            System.out.println("Sin resultados.");
+            System.out.println("❗ Sin resultados.");
         } else {
             var bookData = results.get(0);
             var bookFromDB = bookRepository.findByTitleContainingIgnoreCase(bookData.title());
 
             if (bookFromDB.isPresent()) {
                 var existingBook = bookFromDB.get();
-                System.out.println("El libro '" + existingBook.getTitle() + "' ya está registrado.");
+                System.out.println("❗ El libro '" + existingBook.getTitle() + "' ya está registrado.");
             } else {
                 var newBook = new Book(bookData);
                 var authorData = bookData.authors().get(0);
@@ -108,7 +107,7 @@ public class Main {
                 newBook.setAuthor(author);
                 authorRepository.save(author);
                 bookRepository.save(newBook);
-                System.out.println("Libro registrado correctamente: " + newBook.getTitle());
+                System.out.println("✔ Libro registrado correctamente: " + newBook.getTitle());
             }
         }
 
@@ -116,30 +115,30 @@ public class Main {
 
 
     private void listRegisteredBooks() {
-        System.out.println("\nLibros registrados:");
+        System.out.println("\n🗂️ Libros registrados:\n");
         var books = bookRepository.findAllByOrderByTitle();
         printList(books);
     }
 
 
     private void listRegisteredAuthors() {
-        System.out.println("\nAutores registrados:");
+        System.out.println("\n🗂️ Autores registrados:\n");
         var authors = authorRepository.findAllByOrderByName();
         printList(authors);
     }
 
 
     private void listAliveAuthorsByYear() {
-        System.out.println("\nIngrese el año del que desea listar los autores:");
+        System.out.println("\n✒ Ingrese el año del que desea listar los autores:");
         var inputYear = scanner.nextInt();
         var authors = authorRepository.findAllByYear(inputYear);
-        System.out.println("\nAutores vivos en " + inputYear + ":");
+        System.out.println("\n🗂️ Autores vivos en " + inputYear + ":\n");
         printList(authors);
     }
 
 
     private void listBooksByLanguage() {
-        System.out.println("\nIngrese el código del idioma del cual desea listar los libros:");
+        System.out.println("\n✒ Ingrese el código del idioma del cual desea listar los libros:");
 
         for (Language language : Language.values()) {
             System.out.println(language.getLanguageCode() + " (" + language + ")");
@@ -149,13 +148,13 @@ public class Main {
         var language = Language.fromString(inputLanguage);
         var books = bookRepository.findAllByLanguageOrderByTitle(language.getLanguageCode());
 
-        System.out.println("\nLibros en " + language + ":");
+        System.out.println("\n" + language.getCountryFlag() + " Libros en " + language + ":\n");
         printList(books);
     }
 
 
     private void listBooksByAuthor() {
-        System.out.println("\nIngrese el número del autor del cual desea listar los libros:");
+        System.out.println("\n✒ Ingrese el número del autor del cual desea listar los libros:");
         var authors = authorRepository.findAll();
 
         authors.stream()
@@ -170,20 +169,21 @@ public class Main {
         if (authorFromDB.isPresent()) {
             var author = authorFromDB.get();
             var books = bookRepository.findAllByAuthorId(author.getId());
+            System.out.println("\n🗂️ Libros de " + author.getName() + ":\n");
             printList(books);
         }
     }
 
 
     private void listTop10BooksDownloaded() {
-        System.out.println("\nLos 10 libros más descargados:");
+        System.out.println("\n\uD83D\uDCAF Los 10 libros más descargados:\n");
         var books = bookRepository.findTop10ByOrderByDownloadsDesc();
         printList(books);
     }
 
 
     private void showBookSummary() {
-        System.out.println("\nIngrese el número del libro del cual desea ver el resumen:");
+        System.out.println("\n✒ Ingrese el número del libro del cual desea ver el resumen:");
         var books = bookRepository.findAll();
 
         books.stream()
@@ -196,8 +196,8 @@ public class Main {
         var bookFromDB = bookRepository.findById(inputNumber);
 
         bookFromDB.ifPresent(book -> {
-            System.out.println("\n\t\tResumen de " + book.getTitle().toUpperCase() + ":");
-            System.out.println(StringUtils.formatSummary(book.getSummary(), 10));
+            System.out.println("\n🗂️ Resumen de '" + book.getTitle() + "':\n");
+            System.out.println(StringUtils.formatSummary(book.getSummary(), 10) + "\n");
         });
     }
 
@@ -215,7 +215,7 @@ public class Main {
         //         });
 
         for (Language language : Language.values()) {
-            System.out.println("\nEstadísticas de libros en " + language);
+            System.out.println("\n\uD83D\uDCC8 Estadísticas de libros en " + language + ":");
 
             var stats = books.stream()
                     .filter(book -> Objects
@@ -230,7 +230,7 @@ public class Main {
 
     private <T> void printList(List<T> list) {
         if (list.isEmpty()) {
-            System.out.println("Sin resultados.");
+            System.out.println("❗ Sin resultados.");
         } else {
             list.forEach(System.out::println);
         }
