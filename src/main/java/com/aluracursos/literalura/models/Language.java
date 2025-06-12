@@ -1,17 +1,19 @@
 package com.aluracursos.literalura.models;
 
 public enum Language {
-    SPANISH("es", "español"),
-    ENGLISH("en", "inglés"),
-    FRENCH("fr", "francés"),
-    PORTUGUESE("pt", "portugués");
+    SPANISH("es", "español", "\uD83C\uDDEA\uD83C\uDDF8"),
+    ENGLISH("en", "inglés", "\uD83C\uDDEC\uD83C\uDDE7"),
+    FRENCH("fr", "francés", "\uD83C\uDDEB\uD83C\uDDF7"),
+    PORTUGUESE("pt", "portugués", "\uD83C\uDDF5\uD83C\uDDF9");
 
     private final String languageCode;
     private final String languageName;
+    private final String countryFlag;
 
-    Language(String languageCode, String languageName) {
+    Language(String languageCode, String languageName, String countryFlag) {
         this.languageCode = languageCode;
         this.languageName = languageName;
+        this.countryFlag = countryFlag;
     }
 
     public static Language fromString(String s) {
@@ -35,5 +37,9 @@ public enum Language {
 
     public String getLanguageCode() {
         return languageCode;
+    }
+
+    public String getCountryFlag() {
+        return countryFlag;
     }
 }
