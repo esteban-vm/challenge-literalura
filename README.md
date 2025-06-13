@@ -35,7 +35,7 @@ _La aplicación muestra un menú por consola con las siguientes opciones:_
 - Gestión de dependencias: Apache Maven.
 - Traducción de resúmenes de libros: Google Gemini API.
 
-## 📋 Prerrequisitos
+## 📋 Prerrequisitos:
 
 _Antes de ejecutar la aplicación, asegúrate de tener instalados:_
 
@@ -55,16 +55,19 @@ _Antes de ejecutar la aplicación, asegúrate de tener instalados:_
    Abre el archivo de configuración de Spring ubicado en
    `src/main/resources/application.properties` y ajusta los siguientes valores de configuración:
    ```properties
-   # Asegúrate de que la base de datos "literalura" y las variables de entorno "DB_HOST", "DB_USER" y "DB_PASSWORD" existan.
+   # Asegúrate de que existan las variables de entorno "DB_HOST", "DB_USER" y "DB_PASSWORD".
+   # (O bien, reemplázalas directamente con sus valores correspondientes)
    spring.datasource.url=jdbc:postgresql://${DB_HOST}/literalura
    spring.datasource.username=${DB_USER}
    spring.datasource.password=${DB_PASSWORD}
    ```
-   **Nota:** Crea antes la base de datos en PostgreSQL con el nombre "literalura", porque es necesaria.
+   **Nota:** Crea antes la base de datos en PostgreSQL con el nombre "**literalura**", porque es necesaria.
 
 3. **Configura la clave de API de Gemini:**
    Ve a la página web de [Google AI Studio](https://aistudio.google.com/app/apikey?hl=es-419) y sigue los pasos para
    crearla.
+
    **Nota:** Es posible que tengas que reiniciar el equipo para que la variable de entorno sea reconocida.
+
 4. **Compila y ejecuta** la aplicación desde el IDE de tu preferencia.
    Recomendación: [IntelliJ IDEA](https://www.jetbrains.com/idea/).
