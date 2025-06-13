@@ -107,7 +107,7 @@ public class Main {
                 newBook.setAuthor(author);
                 authorRepository.save(author);
                 bookRepository.save(newBook);
-                System.out.println("✔ Libro registrado correctamente: " + newBook.getTitle());
+                System.out.println("✔ Libro registrado correctamente: '" + newBook.getTitle() + "'");
             }
         }
 
@@ -159,9 +159,7 @@ public class Main {
 
         authors.stream()
                 .sorted(Comparator.comparing(Author::getId))
-                .forEach(author -> {
-                    System.out.println(author.getId() + " - " + author.getName());
-                });
+                .forEach(author -> System.out.println(author.getId() + " - " + author.getName()));
 
         var inputNumber = scanner.nextLong();
         var authorFromDB = authorRepository.findById(inputNumber);
@@ -188,9 +186,7 @@ public class Main {
 
         books.stream()
                 .sorted(Comparator.comparing(Book::getId))
-                .forEach(book -> {
-                    System.out.println(book.getId() + " - " + book.getTitle());
-                });
+                .forEach(book -> System.out.println(book.getId() + " - " + book.getTitle()));
 
         var inputNumber = scanner.nextLong();
         var bookFromDB = bookRepository.findById(inputNumber);
@@ -218,8 +214,7 @@ public class Main {
             System.out.println("\n\uD83D\uDCC8 Estadísticas de libros en " + language + ":");
 
             var stats = books.stream()
-                    .filter(book -> Objects
-                            .equals(book.getLanguage(), language.getLanguageCode()))
+                    .filter(book -> Objects.equals(book.getLanguage(), language.getLanguageCode()))
                     .collect(Collectors.summarizingInt(Book::getDownloads));
 
             System.out.println("Cantidad de libros: " + stats.getCount());
